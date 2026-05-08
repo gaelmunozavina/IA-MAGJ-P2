@@ -1,0 +1,45 @@
+def dls_para_ids(grafo, nodo, meta, limite):
+    """ Función auxiliar que realiza la búsqueda limitada """
+    if nodo == meta:
+        return [nodo]
+    if limite <= 0:
+        return None
+    
+    for vecino in grafo.get(nodo, []):
+        camino = dls_para_ids(grafo, vecino, meta, limite - 1)
+        if camino is not None:
+            return [nodo] + camino
+    return None
+
+def busqueda_profundidad_iterativa(grafo, inicio, meta, max_limite):
+    """
+    Ejecuta IDS incrementando el límite de profundidad en cada iteración.
+    """
+    for limite in range(max_limite + 1):
+        print(f"Probando con límite de profundidad: {limite}")
+        resultado = dls_para_ids(grafo, inicio, meta, limite)
+        
+        if resultado is not None:
+            print(f"¡Meta encontrada en el nivel {limite}!")
+            return resultado
+            
+    return None
+
+# --- EJEMPLO DE PRUEBA ---
+grafo_universidad = {
+    'A': ['B', 'C'],
+    'B': ['D', 'E'],
+    'C': ['F', 'G'],
+    'D': [], 'E': [], 'F': [], 'G': []
+}
+
+inicio_nodo = 'A'
+objetivo_nodo = 'G'
+maximo_a_probar = 5
+
+ruta_final = busqueda_profundidad_iterativa(grafo_universidad, inicio_nodo, objetivo_nodo, maximo_a_probar)
+
+if ruta_final:
+    print(f"Ruta óptima encontrada: {' -> '.join(ruta_final)}")
+else:
+    print("No se encontró la meta en el rango de profundidad permitido.")
